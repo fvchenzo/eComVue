@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commerce</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/app.css">
+    
+</head>
+<body>
+    
+    <div id="app">
+        
+        <header>
+            <h3>ECommerce</h3>
+            
+            <input class="filter" type="text" placeholder="filter by ..." v-model="filter" />
+            <!-- v-on para eventos "mouseover, click" -->
+            <button class="button cart" type="button" data-toggle="example-dropdown-bottom-left" v-on:click="cartOpen = !cartOpen">
+                <img src="images/shopping-cart.png" width="32px" alt=""> {{ cart.length }}
+                
+            </button>
+            <div class="dropdown-pane" data-position="bottom" data-alignment="left" id="example-dropdown-bottom-left" data-dropdown data-auto-focus="true" v-show="cartOpen">
+                <div class="cart-content__product" v-for="(product, index) in cart" :key="product.name" :class=" { 'bg-gray': index & 1 }" style="margin-bottom: 8px;">
+                    <img class="imgCart" v-bind:src="product.images[0].image" :alt="product.name.toUpperCase()">
+                    <span class="contentCart"> {{ product.name }} - $ {{ new Intl.NumberFormat("en-EN").format(product.price) }} - ({{ product.quantity }})</span>
+                </div>
+                <div>
+                    <p class="totalCart" style="color: lightslategray"> Total: $ {{ new Intl.NumberFormat("en-EN").format(total)}} </p>
+                </div>
+            </div>
+            
+        </header>
+        <main>
+            
+            <product v-for="product in productsFiltered" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
+        </main>
+        
+    </div>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    
+
+<script>
+    const { createApp, ref, reactive, toRefs, watch, computed, onMounted } = Vue;
+
+    const app = createApp({
+        setup() {            
+            const products = ref([])
+
+            
+            /*const productsFiltered = computed( () => {
+
+            })*/
+
+            const cartState = reactive({
+                cartOpen: false,
+                cart: [],
+                //propiedad computada en el reactive
+                total: computed( () => {
+                    return cartState.total = cartState.cart.reduce((prev, curr) => {
+                        const prevPrice = prev.price || prev
+                        const prevQuantity = prev.quantity || 1
+                        return prevPrice * prevQuantity + curr.price * curr.quantity
+                    }, 0)
+                })
+            });
+
+
+            function addToCart(product) {
+                const prodIndex = cartState.cart.findIndex(prod => prod.name === product.name)
+                if(prodIndex >= 0) {
+                    cartState.cart[prodIndex].quantity += 1
+                } else {
+                    cartState.cart.push(product)
+                }
+                product.stock -= 1
+            }
+
+            const filter = ref("")
+
+            const productsFiltered = computed (() => {
+                //validando entrada del filtro
+                if ( filter.value == "" ) {
+                    return products.value
+                } else {
+                    return products.value.filter( (product) => product.name.toLowerCase().includes(filter.value.toLowerCase()))
+                }
+            }) 
+
+            fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+                .then( res => res.json())
+                .then( data => {
+                    products.value = data
+                })
+
+            return {
+                
+                ...toRefs(cartState),
+                products,
+                addToCart,
+                filter,
+                productsFiltered
+            }
+            
+        }
+    });
+    
+</script>
+<script src="./Badge.js"></script>
+<script src="./Product.js"></script>
+
+<script>
+    app.mount("#app");
+</script>
+<script src="js/vendor/jquery.js"></script>
+<script src="js/vendor/what-input.js"></script>
+<script src="js/vendor/foundation.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

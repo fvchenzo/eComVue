@@ -1,0 +1,61 @@
+Proyecto ECommerce utilizando el framework xxxxxx
+Conditional rendering
+    Directivas
+    v-bind
+    v-show = agrega style none
+    v-if = comenta la etiqueta
+List rendering
+Event Handling
+
+Options API vs Composition API
+Se trabajó desde el inicio con Options API donde basicamente es un objeto que 
+lleva toda la información
+
+Options: Cuando se trabaja con Options, este es un objeto general que tiene toda la información
+donde podemos encontrar las funciones, metodos y objetos usados en nuestro proyecto, todo esto 
+dentro de un objeto llamado data. Por otro lado, para los metodos se crea otro objeto llamado 
+methods. En Options API tenemos que usar this para dirigirnos al contexto.
+
+
+Composition: cuando se trabaja con Composition dentro de la funcion setup 
+corresponde a trabajar con la funcionalidad interna de vue para trabajar con los 
+modulos reactivos internos, quiere decir que estaremos usando diferentes metodos
+y funciones internas.
+Toda funcion setup retorna un objeto que corresponde al contexto disponible
+del template.
+
+*************************
+Vocabulario
+data: es un proxy en el que vue siempre esta observando si algo cambia.
+ref: permite crear nueva información reactiva.
+
+
+
+
+Tecnologias que se usaron
+Vue.js 3
+HTML
+CSS
+Javascript
+
+
+Ciclo de vida de Vue
+Son básicamente los pasos donde Vue va renderizando los componentes: .
+
+Options
+
+beforeCreate: Apenas se está iniciando nuestro componente
+created: Ya está dispoinible toda la información reactiva del componente
+Validaciones para decidir cómo renderizar aplicaciones en el DOM
+beforeMount: Antes de que la aplicación sea montada en el documento
+mounted: La aplicación ya está montada en el documento
+beforUpdate: Ya que el componente está montado, cuando algo cambia, ANTES de que dicho valor sea actualizado se ejecutará este ciclo de vida.
+updated: Ya que el componente está montado, cuando algo cambia, DESPUÉS de que dicho valor sea actualizado se ejecutará este ciclo de vida.
+beforeUnmount: Antes de que el componente sea destruido
+unmounted: Después de que el componente fue destruido
+
+Composition
+
+setup: beforeCreate, created
+onBeforeMount
+etc
